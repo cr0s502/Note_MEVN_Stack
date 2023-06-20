@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+    mongo:
+        container_name: mongodb
+        image: mongo:6.0.3
+        restart: always
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./database/db:/data/db
+        logging:
+            driver: none
+
+    backendNote:
+        container_name: noteBackend
+        image: note_backend:1.0
+        restart: always
+        env_file: .env
+        environment:
+            PORT: 3000
+            MONGO_URI: mongodb://mongo/Note
+        ports:
+            - "3000:3000"
+        links:
+            - mongo
+            - frontendNote
+
+    frontendNote:
+        container_name: noteFrontend
+        image: note-frontend:1.0
+        restart: always
+        environment:
+            VITE_HOST_BACKEND: backendNote
+            VITE_PORT_BACKEND: 3000
+        ports:
+            - "8080:80"
+        links:
+          - backendNote
