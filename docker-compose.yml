@@ -28,7 +28,7 @@ services:
 
     frontendNote:
         container_name: noteFrontend
-        image: note-frontend:1.0
+        image: note/frontend:1.0
         restart: always
         environment:
             VITE_HOST_BACKEND: backendNote
